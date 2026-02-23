@@ -163,6 +163,30 @@ export class FileService {
     return { message: `DocumentSet ${documentSetId} deleted successfully` };
   }
 
+  async downloadFile(fileId: string, res: any): Promise<void> {
+    const file = await this.fileRepository.findOne({
+      where: { id: fileId },
+    });
+
+    if (!file) {
+      throw new NotFoundException(`File with id ${fileId} not found`);
+    }
+
+    if (!fs.existsSync(file.path_archivo)) {
+      throw new NotFoundException('File not found on disk');
+    }
+
+    const fileBuffer = fs.readFileSync(file.path_archivo);
+
+    res.set({
+      'Content-Type': file.mimetype,
+      'Content-Disposition': `attachment; filename="${file.nombre_original}"`,
+      'Content-Length': fileBuffer.length,
+    });
+
+    res.send(fileBuffer);
+  }
+
   async getFileByPath(filePath: string): Promise<Buffer> {
     if (!fs.existsSync(filePath)) {
       throw new NotFoundException('File not found');

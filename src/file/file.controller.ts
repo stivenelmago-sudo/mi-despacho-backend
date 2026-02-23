@@ -67,10 +67,6 @@ export class FileController {
     @Param('fileId') fileId: string,
     @Res() res: Response,
   ): Promise<void> {
-    // Aquí necesitaríamos obtener el archivo de la BD
-    // Por ahora retornar 501 Not Implemented
-    res
-      .status(501)
-      .json({ message: 'Download functionality not yet implemented' });
+    return this.fileService.downloadFile(fileId, res);
   }
 }
