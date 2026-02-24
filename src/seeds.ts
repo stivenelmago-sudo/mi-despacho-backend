@@ -40,16 +40,14 @@ async function seed() {
   console.log('Creating document sets...');
   const docSet1 = new DocumentSet();
   docSet1.title = 'Initial Complaint';
-  docSet1.description =
-    'Wrongful termination complaint filed with the court';
+  docSet1.description = 'Wrongful termination complaint filed with the court';
   docSet1.expedient_id = savedExpedient.id;
 
   const savedDocSet1 = await documentSetRepository.save(docSet1);
 
   const docSet2 = new DocumentSet();
   docSet2.title = 'Supporting Documents';
-  docSet2.description =
-    'Supporting documentation (contract, emails, evidence)';
+  docSet2.description = 'Supporting documentation (contract, emails, evidence)';
   docSet2.expedient_id = savedExpedient.id;
 
   const savedDocSet2 = await documentSetRepository.save(docSet2);

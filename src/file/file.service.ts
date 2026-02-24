@@ -60,9 +60,7 @@ export class FileService {
     });
 
     if (!expedient) {
-      throw new NotFoundException(
-        `Expedient with id ${expedientId} not found`,
-      );
+      throw new NotFoundException(`Expedient with id ${expedientId} not found`);
     }
 
     if (!files || files.length === 0) {

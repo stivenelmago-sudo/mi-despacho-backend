@@ -17,9 +17,7 @@ export class ExpedientController {
   constructor(private readonly expedientService: ExpedientService) {}
 
   @Post()
-  create(
-    @Body() createExpedientDto: CreateExpedientDto,
-  ): Promise<Expedient> {
+  create(@Body() createExpedientDto: CreateExpedientDto): Promise<Expedient> {
     return this.expedientService.create(createExpedientDto);
   }
 
