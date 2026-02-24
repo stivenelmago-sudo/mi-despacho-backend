@@ -5,13 +5,13 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Habilitar CORS para desarrollo
+  // Enable CORS for development
   app.enableCors({
     origin: true,
     credentials: true,
   });
 
-  // Aplicar ValidationPipe globalmente
+  // Apply ValidationPipe globally
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -24,4 +24,8 @@ async function bootstrap() {
   await app.listen(port);
   console.log(`🚀 Server running on http://localhost:${port}`);
 }
-bootstrap();
+
+bootstrap().catch((error) => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
+});

@@ -4,6 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Response } from 'express';
 import { Repository } from 'typeorm';
 import { File } from '../entities/file.entity';
 import { DocumentSet } from '../entities/document-set.entity';
@@ -161,7 +162,7 @@ export class FileService {
     return { message: `DocumentSet ${documentSetId} deleted successfully` };
   }
 
-  async downloadFile(fileId: string, res: any): Promise<void> {
+  async downloadFile(fileId: string, res: Response): Promise<void> {
     const file = await this.fileRepository.findOne({
       where: { id: fileId },
     });
@@ -185,7 +186,7 @@ export class FileService {
     res.send(fileBuffer);
   }
 
-  async getFileByPath(filePath: string): Promise<Buffer> {
+  getFileByPath(filePath: string): Buffer {
     if (!fs.existsSync(filePath)) {
       throw new NotFoundException('File not found');
     }
