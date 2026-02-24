@@ -6,7 +6,7 @@ import { join } from 'node:path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { getDatabaseConfig } from './config/database.config';
-import { ExpedienteModule } from './expediente/expediente.module';
+import { ExpedientModule } from './expedient/expedient.module';
 import { FileModule } from './file/file.module';
 
 @Module({
@@ -20,7 +20,7 @@ import { FileModule } from './file/file.module';
       serveRoot: '/uploads',
     }),
     TypeOrmModule.forRoot(getDatabaseConfig()),
-    ExpedienteModule,
+    ExpedientModule,
     FileModule,
   ],
   controllers: [AppController],

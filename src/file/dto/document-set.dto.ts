@@ -3,21 +3,21 @@ import { IsString, IsOptional, IsNotEmpty, IsUUID } from 'class-validator';
 export class CreateDocumentSetDto {
   @IsString()
   @IsNotEmpty()
-  titulo: string;
+  title: string;
 
   @IsString()
   @IsOptional()
-  descripcion?: string;
+  description?: string;
 
   @IsUUID()
   @IsNotEmpty()
-  expediente_id: string;
+  expedient_id: string;
 }
 
 export class UpdateDocumentSetDto {
   @IsString()
   @IsOptional()
-  titulo?: string;
+  title?: string;
 
   @IsString()
   @IsOptional()

@@ -20,21 +20,21 @@ import type { Response } from 'express';
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
-  @Post('upload/:expedienteId')
+  @Post('upload/:expedientId')
   @UseInterceptors(FilesInterceptor('files', 50, {}))
   async uploadFiles(
-    @Param('expedienteId') expedienteId: string,
+    @Param('expedientId') expedientId: string,
     @UploadedFiles() files: Express.Multer.File[],
-    @Body() body: { titulo: string; descripcion?: string },
+    @Body() body: { title: string; description?: string },
   ): Promise<DocumentSet> {
-    if (!body.titulo) {
-      throw new BadRequestException('titulo is required');
+    if (!body.title) {
+      throw new BadRequestException('title is required');
     }
 
     return this.fileService.uploadFiles(
-      expedienteId,
-      body.titulo,
-      body.descripcion || '',
+      expedientId,
+      body.title,
+      body.description || '',
       files,
     );
   }

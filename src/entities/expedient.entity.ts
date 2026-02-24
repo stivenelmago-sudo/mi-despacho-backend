@@ -8,35 +8,35 @@ import {
 } from 'typeorm';
 import { DocumentSet } from './document-set.entity';
 
-@Entity('expedientes')
-export class Expediente {
+@Entity('expedients')
+export class Expedient {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ type: 'varchar', length: 255 })
-  numero_expediente: string;
+  case_number: string;
 
   @Column({ type: 'varchar', length: 255 })
-  cliente_nombre: string;
+  client_name: string;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
-  abogado_asignado: string;
+  assigned_lawyer: string;
 
   @Column({
     type: 'enum',
-    enum: ['Activo', 'Cerrado', 'En Revisión', 'Suspendido'],
-    default: 'Activo',
+    enum: ['Active', 'Closed', 'In Review', 'Suspended'],
+    default: 'Active',
   })
-  estado: string;
+  status: string;
 
   @Column({ type: 'text', nullable: true })
-  descripcion: string;
+  description: string;
 
   @Column({ type: 'date', nullable: true })
-  fecha_apertura?: Date;
+  opening_date?: Date;
 
   @Column({ type: 'date', nullable: true })
-  fecha_cierre?: Date;
+  closing_date?: Date;
 
   @CreateDateColumn()
   created_at: Date;
@@ -44,7 +44,7 @@ export class Expediente {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @OneToMany(() => DocumentSet, (documentSet) => documentSet.expediente, {
+  @OneToMany(() => DocumentSet, (documentSet) => documentSet.expedient, {
     cascade: true,
     eager: true,
   })

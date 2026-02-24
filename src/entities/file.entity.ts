@@ -14,19 +14,19 @@ export class File {
   id: string;
 
   @Column({ type: 'varchar', length: 255 })
-  nombre_original: string;
+  original_name: string;
 
   @Column({ type: 'varchar', length: 255 })
-  nombre_archivo: string;
+  file_name: string;
 
   @Column({ type: 'varchar', length: 255 })
-  path_archivo: string;
+  file_path: string;
 
   @Column({ type: 'varchar', length: 100, nullable: true })
   mimetype: string;
 
   @Column({ type: 'bigint' })
-  tamanio_bytes: number;
+  size_bytes: number;
 
   @CreateDateColumn()
   created_at: Date;

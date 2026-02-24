@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Expediente } from './entities/expediente.entity';
+import { Expedient } from './entities/expedient.entity';
 import { DocumentSet } from './entities/document-set.entity';
 import { File } from './entities/file.entity';
 import { Repository } from 'typeorm';
@@ -9,96 +9,96 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 async function seed() {
   const app = await NestFactory.create(AppModule);
 
-  const expedienteRepository = app.get<Repository<Expediente>>(
-    getRepositoryToken(Expediente),
+  const expedientRepository = app.get<Repository<Expedient>>(
+    getRepositoryToken(Expedient),
   );
   const documentSetRepository = app.get<Repository<DocumentSet>>(
     getRepositoryToken(DocumentSet),
   );
   const fileRepository = app.get<Repository<File>>(getRepositoryToken(File));
 
-  // Limpiar BD existente
-  console.log('Limpiando base de datos...');
+  // Clear existing database
+  console.log('Clearing database...');
   await fileRepository.query('TRUNCATE TABLE "files" CASCADE');
   await documentSetRepository.query('TRUNCATE TABLE "document_sets" CASCADE');
-  await expedienteRepository.query('TRUNCATE TABLE "expedientes" CASCADE');
+  await expedientRepository.query('TRUNCATE TABLE "expedients" CASCADE');
 
-  // Crear expediente de prueba
-  console.log('Creando expediente de prueba...');
-  const expediente = new Expediente();
-  expediente.numero_expediente = 'EXP-2026-0001';
-  expediente.cliente_nombre = 'Juan Pérez García';
-  expediente.abogado_asignado = 'Dra. María López Rodríguez';
-  expediente.estado = 'Activo';
-  expediente.descripcion =
-    'Caso de reclamo laboral contra la empresa ABC S.A. por despido injustificado.';
-  expediente.fecha_apertura = new Date('2025-06-15');
+  // Create test expedient
+  console.log('Creating test expedient...');
+  const expedient = new Expedient();
+  expedient.case_number = 'EXP-2026-0001';
+  expedient.client_name = 'John Smith';
+  expedient.assigned_lawyer = 'Dr. Sarah Johnson';
+  expedient.status = 'Active';
+  expedient.description =
+    'Labor dispute claim against ABC Inc. for wrongful termination.';
+  expedient.opening_date = new Date('2025-06-15');
 
-  const savedExpediente = await expedienteRepository.save(expediente);
+  const savedExpedient = await expedientRepository.save(expedient);
 
-  // Crear conjuntos de documentos
-  console.log('Creando conjuntos de documentos...');
+  // Create document sets
+  console.log('Creating document sets...');
   const docSet1 = new DocumentSet();
-  docSet1.titulo = 'Demanda Inicial';
-  docSet1.descripcion =
-    'Demanda de despido injustificado presentada ante la corte';
-  docSet1.expediente_id = savedExpediente.id;
+  docSet1.title = 'Initial Complaint';
+  docSet1.description =
+    'Wrongful termination complaint filed with the court';
+  docSet1.expedient_id = savedExpedient.id;
 
   const savedDocSet1 = await documentSetRepository.save(docSet1);
 
   const docSet2 = new DocumentSet();
-  docSet2.titulo = 'Pruebas Documentales';
-  docSet2.descripcion =
-    'Documentación de apoyo (contrato, correos, evidencias)';
-  docSet2.expediente_id = savedExpediente.id;
+  docSet2.title = 'Supporting Documents';
+  docSet2.description =
+    'Supporting documentation (contract, emails, evidence)';
+  docSet2.expedient_id = savedExpedient.id;
 
   const savedDocSet2 = await documentSetRepository.save(docSet2);
 
-  // Crear archivos simulados
-  console.log('Creando archivos de ejemplo...');
+  // Create sample files
+  console.log('Creating sample files...');
   const file1 = new File();
-  file1.nombre_original = 'demanda-inicial.pdf';
-  file1.nombre_archivo = 'demanda-inicial-1739017200000.pdf';
-  file1.path_archivo = './uploads/demanda-inicial-1739017200000.pdf';
+  file1.original_name = 'complaint.pdf';
+  file1.file_name = 'complaint-1739017200000.pdf';
+  file1.file_path = './uploads/complaint-1739017200000.pdf';
   file1.mimetype = 'application/pdf';
-  file1.tamanio_bytes = 245762;
+  file1.size_bytes = 245762;
   file1.document_set_id = savedDocSet1.id;
 
   await fileRepository.save(file1);
 
   const file2 = new File();
-  file2.nombre_original = 'contrato-laboral.pdf';
-  file2.nombre_archivo = 'contrato-laboral-1739017200001.pdf';
-  file2.path_archivo = './uploads/contrato-laboral-1739017200001.pdf';
+  file2.original_name = 'employment-contract.pdf';
+  file2.file_name = 'contract-1739017200001.pdf';
+  file2.file_path = './uploads/contract-1739017200001.pdf';
   file2.mimetype = 'application/pdf';
-  file2.tamanio_bytes = 134562;
+  file2.size_bytes = 134562;
   file2.document_set_id = savedDocSet2.id;
 
   await fileRepository.save(file2);
 
   const file3 = new File();
-  file3.nombre_original = 'correos-corporativos.pdf';
-  file3.nombre_archivo = 'correos-corporativos-1739017200002.pdf';
-  file3.path_archivo = './uploads/correos-corporativos-1739017200002.pdf';
+  file3.original_name = 'company-emails.pdf';
+  file3.file_name = 'emails-1739017200002.pdf';
+  file3.file_path = './uploads/emails-1739017200002.pdf';
   file3.mimetype = 'application/pdf';
-  file3.tamanio_bytes = 567234;
+  file3.size_bytes = 567234;
   file3.document_set_id = savedDocSet2.id;
 
   await fileRepository.save(file3);
 
-  console.log('\n✓ Seed completado exitosamente');
-  console.log('\nDatos de prueba creados:');
-  console.log(`- Expediente: ${savedExpediente.numero_expediente}`);
-  console.log(`- Cliente: ${savedExpediente.cliente_nombre}`);
-  console.log('- Conjuntos de documentos: 2');
-  console.log('- Total de archivos: 3');
-  console.log('\nPara acceder a los datos, visita:');
-  console.log('http://localhost:4200/expediente/' + savedExpediente.id);
+  console.log('\n✓ Seed completed successfully');
+  console.log('\nTest data created:');
+  console.log(`- Case: ${savedExpedient.case_number}`);
+  console.log(`- Client: ${savedExpedient.client_name}`);
+  console.log('- Document sets: 2');
+  console.log('- Total files: 3');
+  console.log('\nAccess the data at:');
+  console.log('http://localhost:4200/expedient/' + savedExpedient.id);
 
   await app.close();
 }
 
 seed().catch((error) => {
-  console.error('Error durante seed:', error);
+  console.error('Error during seed:', error);
   process.exit(1);
 });

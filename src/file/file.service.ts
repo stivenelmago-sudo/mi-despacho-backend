@@ -7,7 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { File } from '../entities/file.entity';
 import { DocumentSet } from '../entities/document-set.entity';
-import { Expediente } from '../entities/expediente.entity';
+import { Expedient } from '../entities/expedient.entity';
 import { CreateDocumentSetDto } from './dto/document-set.dto';
 import * as path from 'node:path';
 import * as fs from 'node:fs';
@@ -21,10 +21,10 @@ export class FileService {
     private readonly fileRepository: Repository<File>,
     @InjectRepository(DocumentSet)
     private readonly documentSetRepository: Repository<DocumentSet>,
-    @InjectRepository(Expediente)
-    private readonly expedienteRepository: Repository<Expediente>,
+    @InjectRepository(Expedient)
+    private readonly expedientRepository: Repository<Expedient>,
   ) {
-    // Asegurar que el directorio de carga existe
+    // Ensure upload directory exists
     if (!fs.existsSync(this.uploadDir)) {
       fs.mkdirSync(this.uploadDir, { recursive: true });
     }
@@ -33,14 +33,14 @@ export class FileService {
   async createDocumentSet(
     createDocumentSetDto: CreateDocumentSetDto,
   ): Promise<DocumentSet> {
-    // Verificar que el expediente existe
-    const expediente = await this.expedienteRepository.findOne({
-      where: { id: createDocumentSetDto.expediente_id },
+    // Verify that the expedient exists
+    const expedient = await this.expedientRepository.findOne({
+      where: { id: createDocumentSetDto.expedient_id },
     });
 
-    if (!expediente) {
+    if (!expedient) {
       throw new NotFoundException(
-        `Expediente with id ${createDocumentSetDto.expediente_id} not found`,
+        `Expedient with id ${createDocumentSetDto.expedient_id} not found`,
       );
     }
 
@@ -49,19 +49,19 @@ export class FileService {
   }
 
   async uploadFiles(
-    expedienteId: string,
-    titulo: string,
-    descripcion: string,
+    expedientId: string,
+    title: string,
+    description: string,
     files: Express.Multer.File[],
   ): Promise<DocumentSet> {
-    // Verificar que el expediente existe
-    const expediente = await this.expedienteRepository.findOne({
-      where: { id: expedienteId },
+    // Verify that the expedient exists
+    const expedient = await this.expedientRepository.findOne({
+      where: { id: expedientId },
     });
 
-    if (!expediente) {
+    if (!expedient) {
       throw new NotFoundException(
-        `Expediente with id ${expedienteId} not found`,
+        `Expedient with id ${expedientId} not found`,
       );
     }
 
@@ -69,35 +69,35 @@ export class FileService {
       throw new BadRequestException('No files provided');
     }
 
-    // Crear document set
+    // Create document set
     const documentSet = await this.createDocumentSet({
-      expediente_id: expedienteId,
-      titulo,
-      descripcion,
+      expedient_id: expedientId,
+      title,
+      description,
     });
 
-    // Guardar archivos
+    // Save files
     for (const file of files) {
       const fileName = `${Date.now()}-${file.originalname}`;
       const filePath = path.join(this.uploadDir, fileName);
 
-      // Escribir archivo en disco
+      // Write file to disk
       fs.writeFileSync(filePath, file.buffer);
 
-      // Guardar registro en BD
+      // Save record to database
       const newFile = this.fileRepository.create({
-        nombre_original: file.originalname,
-        nombre_archivo: fileName,
-        path_archivo: filePath,
+        original_name: file.originalname,
+        file_name: fileName,
+        file_path: filePath,
         mimetype: file.mimetype,
-        tamanio_bytes: file.size,
+        size_bytes: file.size,
         document_set_id: documentSet.id,
       });
 
       await this.fileRepository.save(newFile);
     }
 
-    // Retornar documento set con archivos
+    // Return document set with files
     const savedDocumentSet = await this.documentSetRepository.findOne({
       where: { id: documentSet.id },
       relations: ['files'],
@@ -136,12 +136,12 @@ export class FileService {
       throw new NotFoundException(`File with id ${fileId} not found`);
     }
 
-    // Eliminar archivo del disco
-    if (fs.existsSync(file.path_archivo)) {
-      fs.unlinkSync(file.path_archivo);
+    // Delete file from disk
+    if (fs.existsSync(file.file_path)) {
+      fs.unlinkSync(file.file_path);
     }
 
-    // Eliminar registro de BD
+    // Delete record from database
     await this.fileRepository.remove(file);
 
     return { message: `File ${fileId} deleted successfully` };
@@ -150,14 +150,14 @@ export class FileService {
   async deleteDocumentSet(documentSetId: string): Promise<{ message: string }> {
     const documentSet = await this.getDocumentSet(documentSetId);
 
-    // Eliminar todos los archivos del disco
+    // Delete all files from disk
     for (const file of documentSet.files) {
-      if (fs.existsSync(file.path_archivo)) {
-        fs.unlinkSync(file.path_archivo);
+      if (fs.existsSync(file.file_path)) {
+        fs.unlinkSync(file.file_path);
       }
     }
 
-    // Eliminar documento set (cascade elimina archivos de BD)
+    // Delete document set (cascade deletes files from database)
     await this.documentSetRepository.remove(documentSet);
 
     return { message: `DocumentSet ${documentSetId} deleted successfully` };
@@ -172,15 +172,15 @@ export class FileService {
       throw new NotFoundException(`File with id ${fileId} not found`);
     }
 
-    if (!fs.existsSync(file.path_archivo)) {
+    if (!fs.existsSync(file.file_path)) {
       throw new NotFoundException('File not found on disk');
     }
 
-    const fileBuffer = fs.readFileSync(file.path_archivo);
+    const fileBuffer = fs.readFileSync(file.file_path);
 
     res.set({
       'Content-Type': file.mimetype,
-      'Content-Disposition': `attachment; filename="${file.nombre_original}"`,
+      'Content-Disposition': `attachment; filename="${file.original_name}"`,
       'Content-Length': fileBuffer.length,
     });
 

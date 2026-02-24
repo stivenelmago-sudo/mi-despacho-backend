@@ -7,7 +7,7 @@ import {
   CreateDateColumn,
   JoinColumn,
 } from 'typeorm';
-import { Expediente } from './expediente.entity';
+import { Expedient } from './expedient.entity';
 import { File } from './file.entity';
 
 @Entity('document_sets')
@@ -16,22 +16,22 @@ export class DocumentSet {
   id: string;
 
   @Column({ type: 'varchar', length: 255 })
-  titulo: string;
+  title: string;
 
   @Column({ type: 'text', nullable: true })
-  descripcion: string;
+  description: string;
 
   @CreateDateColumn()
   created_at: Date;
 
-  @ManyToOne(() => Expediente, (expediente) => expediente.document_sets, {
+  @ManyToOne(() => Expedient, (expedient) => expedient.document_sets, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'expediente_id' })
-  expediente: Expediente;
+  @JoinColumn({ name: 'expedient_id' })
+  expedient: Expedient;
 
   @Column({ type: 'uuid' })
-  expediente_id: string;
+  expedient_id: string;
 
   @OneToMany(() => File, (file) => file.document_set, {
     cascade: true,
