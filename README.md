@@ -1,34 +1,34 @@
 # MiDespacho - Backend
 
-Sistema de gestión de despachos (oficinas) construido con **NestJS 11** y **TypeScript**.
+Case law management system (law offices) built with **NestJS 11** and **TypeScript**.
 
-## 📋 Descripción
+## 📋 Description
 
-MiDespacho Backend es una API REST desarrollada con NestJS que proporciona funcionalidades de gestión de expedientes, documentos y organización de archivos para sistemas de despachos legales y administrativos.
+MiDespacho Backend is a REST API developed with NestJS that provides case files, documents and file organization management features for legal and administrative law office systems.
 
-**Stack Tecnológico:**
+**Tech Stack:**
 - **Framework:** NestJS 11.0.1
-- **Lenguaje:** TypeScript 5.x (ES2023)
+- **Language:** TypeScript 5.x (ES2023)
 - **Runtime:** Node.js 22.10.7+
-- **BD:** Configurable (PostgreSQL/MySQL a través de TypeORM)
+- **Database:** Configurable (PostgreSQL/MySQL via TypeORM)
 - **Testing:** Jest
 - **Linting:** ESLint + Prettier
 
-## 🚀 Configuración Rápida
+## 🚀 Quick Setup
 
-### Requisitos Previos
-- Node.js 22.10.7 o superior
-- npm 10.x o superior
+### Prerequisites
+- Node.js 22.10.7 or higher
+- npm 10.x or higher
 
-### Instalación
+### Installation
 
 ```bash
 npm install
 ```
 
-### Variables de Entorno
+### Environment Variables
 
-Crea un archivo `.env` en la raíz del proyecto (opcional):
+Create a `.env` file in the project root (optional):
 
 ```env
 PORT=3000
@@ -36,89 +36,89 @@ NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/mi_despacho
 ```
 
-## 🏃 Comandos Principales
+## 🏃 Main Commands
 
 ```bash
-# Desarrollo con hot-reload
+# Development with hot-reload
 npm run start:dev
 
-# Iniciar en modo debug (puerto 9229)
+# Start in debug mode (port 9229)
 npm run start:debug
 
-# Compilar para producción
+# Compile for production
 npm run build
 
-# Ejecutar producción
+# Run production
 npm run start:prod
 ```
 
 ## 🧪 Testing
 
 ```bash
-# Tests unitarios
+# Unit tests
 npm run test
 
-# Modo watch
+# Watch mode
 npm run test:watch
 
-# Cobertura de tests
+# Test coverage
 npm run test:cov
 
-# Tests E2E
+# E2E tests
 npm run test:e2e
 
-# Debug de tests
+# Debug tests
 npm run test:debug
 ```
 
-## 📝 Código y Estilo
+## 📝 Code and Style
 
 ```bash
 # Linting (ESLint + auto-fix)
 npm run lint
 
-# Formateo con Prettier
+# Formatting with Prettier
 npm run format
 ```
 
-> **Nota:** Lint y format se ejecutan automáticamente como pre-commit hooks. Ejecuta ambos antes de hacer push.
+> **Note:** Lint and format run automatically as pre-commit hooks. Run both before pushing.
 
-## 🏗️ Arquitectura
+## 🏗️ Architecture
 
-### Estructura de Módulos
+### Module Structure
 
 ```
 src/
-├── app.controller.ts       # Controlador raíz
-├── app.service.ts          # Lógica de negocio raíz
-├── app.module.ts           # Módulo root - importa todos los módulos
-├── main.ts                 # Bootstrap de la aplicación
-├── config/                 # Configuraciones (BD, etc.)
-├── entities/               # Entidades TypeORM
+├── app.controller.ts       # Root controller
+├── app.service.ts          # Root business logic
+├── app.module.ts           # Root module - imports all modules
+├── main.ts                 # Application bootstrap
+├── config/                 # Configurations (Database, etc.)
+├── entities/               # TypeORM entities
 │   ├── expediente.entity.ts
 │   ├── document-set.entity.ts
 │   └── file.entity.ts
-├── expediente/             # Módulo de Expedientes
+├── expediente/             # Case files module
 │   ├── expediente.controller.ts
 │   ├── expediente.service.ts
 │   ├── expediente.module.ts
 │   └── dto/
-├── file/                   # Módulo de Archivos
+├── file/                   # Files module
 │   ├── file.controller.ts
 │   ├── file.service.ts
 │   ├── file.module.ts
 │   └── dto/
-└── common/                 # Utilerías compartidas
+└── common/                 # Shared utilities
 ```
 
-### Patrones Clave
+### Key Patterns
 
-1. **Inyección de Dependencias:** Todos los servicios se inyectan en constructores
-2. **DTOs (Data Transfer Objects):** Validación de entrada en `dto/` folders
-3. **Controladores:** Delegación de lógica a servicios
-4. **Módulos:** Agrupación de features por dominio de negocio
+1. **Dependency Injection:** All services are injected in constructors
+2. **DTOs (Data Transfer Objects):** Input validation in `dto/` folders
+3. **Controllers:** Delegate logic to services
+4. **Modules:** Group features by business domain
 
-Ejemplo:
+Example:
 
 ```typescript
 @Controller('expedientes')
@@ -132,43 +132,43 @@ export class ExpedienteController {
 }
 ```
 
-## 📡 API Endpoints Principales
+## 📡 Main API Endpoints
 
 - `GET /` - Health check
-- `GET /expedientes` - Listar expedientes
-- `GET /expedientes/:id` - Obtener expediente
-- `POST /expedientes` - Crear expediente
-- `POST /files/upload` - Subir archivo
-- `GET /files/:id` - Descargar archivo
+- `GET /expedientes` - List case files
+- `GET /expedientes/:id` - Get case file
+- `POST /expedientes` - Create case file
+- `POST /files/upload` - Upload file
+- `GET /files/:id` - Download file
 
-## 🗄️ Base de Datos
+## 🗄️ Database
 
-La configuración de BD se define en `src/config/database.config.ts`. Por defecto usa TypeORM con soporte para PostgreSQL/MySQL.
+Database configuration is defined in `src/config/database.config.ts`. By default uses TypeORM with PostgreSQL/MySQL support.
 
-### Entidades Principales
-- **Expediente:** Caso/expediente legal
-- **DocumentSet:** Conjunto de documentos
-- **File:** Archivos subidos
+### Main Entities
+- **Expediente:** Legal case/file
+- **DocumentSet:** Set of documents
+- **File:** Uploaded files
 
-> Para más detalles sobre schema, ver `src/entities/`
+> For more details on schema, see `src/entities/`
 
 ## 🐳 Docker & Compose
 
-El proyecto incluye `docker-compose.yml` para levantar dependencias (BD, etc.):
+The project includes `docker-compose.yml` to start dependencies (Database, etc.):
 
 ```bash
 docker-compose up -d
 ```
 
-## 📖 Documentación Adicional
+## 📖 Additional Documentation
 
-- Desarrollo detallado: [`README-DEV.md`](README-DEV.md)
+- Detailed development: [`README-DEV.md`](README-DEV.md)
 - [NestJS Docs](https://docs.nestjs.com)
 
-## 📄 Licencia
+## 📄 License
 
 MIT
 
 ---
 
-**Última actualización:** Febrero 2026
+**Last updated:** February 2026

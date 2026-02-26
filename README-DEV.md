@@ -1,132 +1,132 @@
 # MiDespacho Backend
 
-Backend NestJS + TypeORM + PostgreSQL para la gestión de expedientes jurídicos.
+NestJS + TypeORM + PostgreSQL backend for legal case file management.
 
-## Requisitos previos
+## Prerequisites
 
 - Node.js 22.10.7+
 - npm 10.9.3+
-- Docker y Docker Compose (para base de datos)
+- Docker and Docker Compose (for database)
 
-## Instalación
+## Installation
 
 ```bash
-# Instalar dependencias
+# Install dependencies
 npm install
 ```
 
-## Configuración
+## Configuration
 
-### Base de datos
+### Database
 
-La aplicación usa PostgreSQL. Para iniciar la BD con Docker Compose:
+The application uses PostgreSQL. To start the database with Docker Compose:
 
 ```bash
-# Iniciar contenedores PostgreSQL y pgAdmin
+# Start PostgreSQL and pgAdmin containers
 docker-compose up -d
 
-# Verificar que PostgreSQL está corriendo
+# Verify that PostgreSQL is running
 docker ps
 ```
 
-La BD se configura automáticamente con las credenciales en `.env.local`:
+The database is automatically configured with credentials in `.env.local`:
 
 - **Host**: localhost
-- **Puerto**: 5432
-- **Usuario**: midespacho_user
-- **Contraseña**: midespacho_pass_2026
-- **Base de datos**: midespacho_db
+- **Port**: 5432
+- **User**: midespacho_user
+- **Password**: midespacho_pass_2026
+- **Database**: midespacho_db
 
-Para acceder a pgAdmin:
+To access pgAdmin:
 
 - URL: http://localhost:5050
 - Email: admin@midespacho.local
-- Contraseña: admin
+- Password: admin
 
-### Cargar datos iniciales
+### Load initial data
 
-Una vez que la BD está corriendo, cargar datos de prueba:
+Once the database is running, load test data:
 
 ```bash
 npm run seed
 ```
 
-Esto creará:
+This will create:
 
-- Un expediente de prueba (EXP-2026-0001)
-- Dos conjuntos de documentos
-- Tres archivos de ejemplo
+- One test case file (EXP-2026-0001)
+- Two document sets
+- Three example files
 
-## Desarrollo
+## Development
 
 ```bash
-# Iniciar servidor en modo watch (puerto 3000)
+# Start server in watch mode (port 3000)
 npm run start:dev
 
-# En otra terminal, ejecutar seed para datos iniciales
+# In another terminal, run seed for initial data
 npm run seed
 ```
 
-El servidor estará disponible en: http://localhost:3000
+The server will be available at: http://localhost:3000
 
-### Endpoints principales
+### Main endpoints
 
-- `GET /expediente` - Listar expedientes
-- `GET /expediente/:id` - Obtener expediente con documentos
-- `POST /expediente` - Crear expediente
-- `PUT /expediente/:id` - Actualizar expediente
-- `DELETE /expediente/:id` - Eliminar expediente
-- `POST /file/upload/:expedienteId` - Cargar documentos (multipart/form-data)
-- `GET /file/document-set/:documentSetId` - Obtener conjunto de documentos
-- `DELETE /file/:fileId` - Eliminar archivo
-- `DELETE /file/document-set/:documentSetId` - Eliminar conjunto de documentos
+- `GET /expediente` - List case files
+- `GET /expediente/:id` - Get case file with documents
+- `POST /expediente` - Create case file
+- `PUT /expediente/:id` - Update case file
+- `DELETE /expediente/:id` - Delete case file
+- `POST /file/upload/:expedienteId` - Upload documents (multipart/form-data)
+- `GET /file/document-set/:documentSetId` - Get document set
+- `DELETE /file/:fileId` - Delete file
+- `DELETE /file/document-set/:documentSetId` - Delete document set
 
 ## Testing
 
 ```bash
-# Ejecutar tests unitarios
+# Run unit tests
 npm run test
 
-# Modo watch
+# Watch mode
 npm run test:watch
 
-# Cobertura
+# Coverage
 npm run test:cov
 
-# Tests E2E
+# E2E tests
 npm run test:e2e
 ```
 
-## Linting y formato
+## Linting and formatting
 
 ```bash
-# Lint con ESLint (auto-fix)
+# Lint with ESLint (auto-fix)
 npm run lint
 
-# Formato con Prettier
+# Format with Prettier
 npm run format
 ```
 
-## Build para producción
+## Production build
 
 ```bash
-# Compilar TypeScript
+# Compile TypeScript
 npm run build
 
-# Ejecutar la aplicación compilada
+# Run the compiled application
 npm run start:prod
 ```
 
-## Estructura del proyecto
+## Project structure
 
 ```
 src/
 ├── config/
-│   └── database.config.ts      # Configuración TypeORM
+│   └── database.config.ts      # TypeORM configuration
 ├── entities/
-│   ├── expediente.entity.ts    # Entidad: Caso jurídico
-│   ├── document-set.entity.ts  # Entidad: Conjunto de documentos
-│   └── file.entity.ts          # Entidad: Archivo individual
+│   ├── expediente.entity.ts    # Entity: Legal case
+│   ├── document-set.entity.ts  # Entity: Document set
+│   └── file.entity.ts          # Entity: Individual file
 ├── expediente/
 │   ├── expediente.controller.ts
 │   ├── expediente.service.ts
@@ -137,16 +137,16 @@ src/
 │   ├── file.controller.ts
 │   ├── file.service.ts
 │   └── file.module.ts
-├── app.module.ts               # Módulo raíz
-├── app.controller.ts           # Controlador demo
-├── app.service.ts              # Servicio demo
+├── app.module.ts               # Root module
+├── app.controller.ts           # Demo controller
+├── app.service.ts              # Demo service
 ├── main.ts                     # Bootstrap
-└── seeds.ts                    # Script de datos iniciales
+└── seeds.ts                    # Initial data script
 ```
 
-## Notas importantes
+## Important notes
 
-- Los archivos cargados se guardan en `/uploads` (ignorado en git)
-- La BD se sincroniza automáticamente en desarrollo (TypeORM synchronize: true)
-- CORS habilitado para desarrollo local
-- ValidationPipe activo para validación de DTOs
+- Uploaded files are saved in `/uploads` (ignored in git)
+- Database syncs automatically in development (TypeORM synchronize: true)
+- CORS enabled for local development
+- ValidationPipe active for DTO validation
